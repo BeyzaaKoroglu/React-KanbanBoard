@@ -3,8 +3,10 @@ import {
   FC,
   PropsWithChildren,
   useContext,
+  useEffect,
   useState,
 } from "react";
+import instance from "../../services/instance";
 import { ContextType, StateType } from "./types";
 
 const initialState: StateType = {
@@ -21,6 +23,17 @@ export const LoginContext = createContext<ContextType>({
 
 export const LoginProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, setState] = useState<StateType>(initialState);
+
+  useEffect(() => {
+    instance.interceptors.request.use((config) => {
+      const _config = { ...config };
+      _config.headers = {
+        ...config.headers,
+        authorization: "Bearer " + state.token,
+      };
+      return _config;
+    });
+  }, [state.token]);
 
   const login = (token: string, username: string) => {
     setState({

@@ -1,0 +1,134 @@
+import CheckIcon from "@mui/icons-material/Check";
+import SettingsIcon from "@mui/icons-material/Settings";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import LogoutIcon from "@mui/icons-material/Logout";
+import {
+  AppBar,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  TextField,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import React, { FC, useEffect, useState } from "react";
+import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
+import { useLoginContext } from "../../contexts/LoginContext/LoginContext";
+import { board } from "../../services/endpoints/board";
+import { Styled } from "./BoardHeader.styled";
+import { BoardHeaderProps } from "./BoardHeader.type";
+
+const BoardHeader: FC<BoardHeaderProps> = ({ onChangePage }) => {
+  const { selectedBoard, updateBoard, deleteBoard } = useBoardContext();
+  const { logout } = useLoginContext();
+  const [value, setValue] = useState<string>("");
+  const [edit, setEdit] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  useEffect(() => {
+    if (selectedBoard) setValue(selectedBoard.title);
+  }, [selectedBoard]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    setEdit(false);
+    board.update(selectedBoard.id, { title: value }).then(({ data }) => {
+      updateBoard(data);
+    });
+  };
+
+  const handleDelete = () => {
+    board.destroy(selectedBoard.id).then(() => {
+      deleteBoard(selectedBoard.id);
+      onChangePage();
+    });
+  };
+
+  const handleLogout = () => {
+    logout();
+    onChangePage();
+  };
+  return (
+    <Styled>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Button onClick={() => onChangePage()} color="inherit">
+              Boards
+            </Button>
+          </Typography>
+          {edit ? (
+            <Box sx={{ flexGrow: 1 }}>
+              <TextField
+                variant="standard"
+                type="text"
+                value={value}
+                name="title"
+                onChange={handleChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleSubmit}
+                      >
+                        <CheckIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+          ) : (
+            <Typography onClick={() => setEdit(true)} sx={{ flexGrow: 1 }}>
+              {selectedBoard.title}
+            </Typography>
+          )}
+
+          <IconButton
+            size="large"
+            aria-label="show more"
+            aria-haspopup="true"
+            onClick={(event) => setAnchorEl(event.currentTarget)}
+            color="inherit"
+          >
+            <SettingsIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+          >
+            <MenuItem onClick={handleDelete}>
+              <DeleteForeverIcon sx={{ marginRight: 1 }} />
+              Delete Board
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleLogout}>
+              <LogoutIcon sx={{ marginRight: 1 }} />
+              Logout
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+    </Styled>
+  );
+};
+
+export default BoardHeader;

@@ -3,12 +3,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import { useLoginContext } from "./contexts/LoginContext/LoginContext";
+import HomePage from "./pages/HomePage";
+import { BoardProvider } from "./contexts/BoardContext/BoardContext";
+import BoardPage from "./pages/BoardPage";
 
 function App() {
-  const { isLoggedIn, logout } = useLoginContext();
-  const handleLogout = () => {
-    logout();
-  };
+  const { isLoggedIn } = useLoginContext();
+
   return (
     <div className="App">
       {!isLoggedIn ? (
@@ -20,9 +21,15 @@ function App() {
           </Routes>
         </BrowserRouter>
       ) : (
-        <div>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
+        <BoardProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/boards" element={<HomePage />} />
+              <Route path="/board/:id" element={<BoardPage />} />
+            </Routes>
+          </BrowserRouter>
+        </BoardProvider>
       )}
     </div>
   );
