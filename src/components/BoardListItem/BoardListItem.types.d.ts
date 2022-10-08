@@ -5,6 +5,12 @@ export type BoardListItemProps = {
     createdAt: string;
     updatedAt: string;
     ownerId: number;
-    members: any;
+    members: Array<{
+      id: number;
+      username: string;
+      createdAt: string;
+      updatedAt: string;
+      BoardMember: any;
+    }>;
   };
 };

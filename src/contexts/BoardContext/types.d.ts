@@ -1,5 +1,3 @@
-import React from "react";
-
 export type ContextType = {
   state: StateType;
   addBoard: (newBoard: BoardType) => void;
@@ -21,5 +19,5 @@ export type BoardType = {
   createdAt: string;
   updatedAt: string;
   ownerId: number;
-  members: any;
+  members: Array<any>;
 };

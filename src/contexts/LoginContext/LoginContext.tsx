@@ -13,10 +13,11 @@ const initialState: StateType = {
   isLoggedIn: Boolean(localStorage.getItem("token")),
   token: localStorage.getItem("token") || "",
   username: localStorage.getItem("username") || "",
+  id: Number(localStorage.getItem("id")) || -1,
 };
 
 export const LoginContext = createContext<ContextType>({
-  login: (token: string, username: string) => {},
+  login: (token: string, username: string, id: number) => {},
   logout: () => {},
   state: initialState,
 });
@@ -35,8 +36,9 @@ export const LoginProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   }, [state.token]);
 
-  const login = (token: string, username: string) => {
+  const login = (token: string, username: string, id: number) => {
     setState({
+      id,
       username,
       token,
       isLoggedIn: true,
@@ -44,16 +46,19 @@ export const LoginProvider: FC<PropsWithChildren> = ({ children }) => {
 
     localStorage.setItem("token", token);
     localStorage.setItem("username", username);
+    localStorage.setItem("id", String(id));
   };
 
   const logout = () => {
     setState({
+      id: -1,
       username: "",
       token: "",
       isLoggedIn: false,
     });
     localStorage.setItem("token", "");
     localStorage.setItem("username", "");
+    localStorage.setItem("id", "-1");
   };
 
   const values = {
@@ -70,6 +75,7 @@ export const LoginProvider: FC<PropsWithChildren> = ({ children }) => {
 export const useLoginContext = () => {
   const { state, login, logout } = useContext(LoginContext);
   return {
+    userId: state.id,
     username: state.username,
     isLoggedIn: state.isLoggedIn,
     login,

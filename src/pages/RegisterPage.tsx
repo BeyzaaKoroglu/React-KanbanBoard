@@ -11,7 +11,7 @@ const RegisterPage = () => {
     auth
       .register(values)
       .then(({ data }) => {
-        login(data.token, data.username);
+        login(data.token, data.username, data.id);
         navigate("/");
       })
       .catch((error) =>

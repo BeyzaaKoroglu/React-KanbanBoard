@@ -11,7 +11,7 @@ const LoginPage = () => {
     auth
       .login(values)
       .then(({ data }) => {
-        login(data.token, data.username);
+        login(data.token, data.username, data.id);
         navigate("/");
       })
       .catch((error) => alert(error.response.data));

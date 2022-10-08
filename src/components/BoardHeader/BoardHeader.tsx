@@ -1,6 +1,5 @@
 import CheckIcon from "@mui/icons-material/Check";
 import SettingsIcon from "@mui/icons-material/Settings";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import LogoutIcon from "@mui/icons-material/Logout";
 import {
   AppBar,
@@ -22,9 +21,9 @@ import { board } from "../../services/endpoints/board";
 import { Styled } from "./BoardHeader.styled";
 import { BoardHeaderProps } from "./BoardHeader.type";
 
-const BoardHeader: FC<BoardHeaderProps> = ({ onChangePage }) => {
+const BoardHeader: FC<BoardHeaderProps> = ({ onOpenModel, onChangePage }) => {
   const { selectedBoard, updateBoard, deleteBoard } = useBoardContext();
-  const { logout } = useLoginContext();
+  const { logout, userId } = useLoginContext();
   const [value, setValue] = useState<string>("");
   const [edit, setEdit] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -64,7 +63,7 @@ const BoardHeader: FC<BoardHeaderProps> = ({ onChangePage }) => {
               Boards
             </Button>
           </Typography>
-          {edit ? (
+          {selectedBoard.ownerId === userId && edit ? (
             <Box sx={{ flexGrow: 1 }}>
               <TextField
                 variant="standard"
@@ -115,11 +114,13 @@ const BoardHeader: FC<BoardHeaderProps> = ({ onChangePage }) => {
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
           >
-            <MenuItem onClick={handleDelete}>
-              <DeleteForeverIcon sx={{ marginRight: 1 }} />
-              Delete Board
-            </MenuItem>
-            <Divider />
+            {selectedBoard.ownerId === userId && (
+              <Box>
+                <MenuItem onClick={onOpenModel}>Board Members</MenuItem>
+                <MenuItem onClick={handleDelete}>Delete Board</MenuItem>
+                <Divider />
+              </Box>
+            )}
             <MenuItem onClick={handleLogout}>
               <LogoutIcon sx={{ marginRight: 1 }} />
               Logout
