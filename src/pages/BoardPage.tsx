@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BoardHeader from "../components/BoardHeader";
 import BoardMembers from "../components/BoardMembers";
+import Lists from "../components/Lists";
 import { useBoardContext } from "../contexts/BoardContext/BoardContext";
+import { ListProvider } from "../contexts/ListContext/ListContext";
 
 const BoardPage = () => {
   let { id } = useParams();
@@ -22,13 +24,16 @@ const BoardPage = () => {
   };
 
   return (
-    <div>
-      <BoardHeader
-        onOpenModel={handleOpenModel}
-        onChangePage={handleChangePage}
-      />
-      <BoardMembers open={open} onClose={handleClose} />
-    </div>
+    <ListProvider>
+      <div>
+        <BoardHeader
+          onOpenModel={handleOpenModel}
+          onChangePage={handleChangePage}
+        />
+        <BoardMembers open={open} onClose={handleClose} />
+        <Lists />
+      </div>
+    </ListProvider>
   );
 };
 

@@ -1,4 +1,5 @@
 import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import {
@@ -43,6 +44,11 @@ const BoardHeader: FC<BoardHeaderProps> = ({ onOpenModel, onChangePage }) => {
     });
   };
 
+  const handleCancel = () => {
+    setValue(selectedBoard.title);
+    setEdit(false);
+  };
+
   const handleDelete = () => {
     board.destroy(selectedBoard.id).then(() => {
       deleteBoard(selectedBoard.id);
@@ -79,6 +85,12 @@ const BoardHeader: FC<BoardHeaderProps> = ({ onOpenModel, onChangePage }) => {
                         onClick={handleSubmit}
                       >
                         <CheckIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleCancel}
+                      >
+                        <CloseIcon />
                       </IconButton>
                     </InputAdornment>
                   ),
