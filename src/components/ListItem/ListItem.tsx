@@ -19,6 +19,7 @@ import { list as listServices } from "../../services/endpoints/list";
 import { useListContext } from "../../contexts/ListContext/ListContext";
 import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
 import { useLoginContext } from "../../contexts/LoginContext/LoginContext";
+import { Draggable } from "react-beautiful-dnd";
 
 const style = {
   overflow: "visible",
@@ -44,7 +45,7 @@ const style = {
   },
 };
 
-const ListItem: FC<ListItemProps> = ({ list }) => {
+const ListItem: FC<ListItemProps> = ({ list, index }) => {
   const { deleteList, updateList } = useListContext();
   const { selectedBoard } = useBoardContext();
   const { userId } = useLoginContext();
@@ -59,13 +60,10 @@ const ListItem: FC<ListItemProps> = ({ list }) => {
 
   const handleRename = () => {
     if (value !== "") {
-      listServices
-        .update(list.id, { title: value, boardId: list.boardId })
-        .then(({ data }) => {
-          updateList(data);
-          setEdit(false);
-          console.log(data);
-        });
+      listServices.update(list.id, { title: value }).then(({ data }) => {
+        updateList(data);
+        setEdit(false);
+      });
     }
   };
 
@@ -81,74 +79,82 @@ const ListItem: FC<ListItemProps> = ({ list }) => {
   };
 
   return (
-    <Styled>
-      <Card sx={{ width: 250 }}>
-        <CardContent>
-          {edit ? (
-            <TextField
-              variant="standard"
-              type="text"
-              value={value}
-              name="title"
-              onChange={handleChange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleRename}
-                    >
-                      <CheckIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleCancel}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          ) : (
-            <Typography variant="h6">
-              {list.title}
-              {selectedBoard.ownerId === userId && (
-                <Tooltip title="List settings">
-                  <IconButton
-                    onClick={(event) => setAnchorEl(event.currentTarget)}
-                    size="small"
-                    edge="end"
-                    sx={{ float: "right" }}
-                    aria-controls={openMenu ? "list-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={openMenu ? "true" : undefined}
-                  >
-                    <MoreIcon sx={{ width: 24, height: 24 }} />
-                  </IconButton>
-                </Tooltip>
+    <Draggable draggableId={String(list.id)} index={index}>
+      {(provided) => (
+        <Styled
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+          {...provided.dragHandleProps}
+        >
+          <Card sx={{ width: 250 }}>
+            <CardContent>
+              {edit ? (
+                <TextField
+                  variant="standard"
+                  type="text"
+                  value={value}
+                  name="title"
+                  onChange={handleChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleRename}
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleCancel}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              ) : (
+                <Typography variant="h6">
+                  {list.title}
+                  {selectedBoard.ownerId === userId && (
+                    <Tooltip title="List settings">
+                      <IconButton
+                        onClick={(event) => setAnchorEl(event.currentTarget)}
+                        size="small"
+                        edge="end"
+                        sx={{ float: "right" }}
+                        aria-controls={openMenu ? "list-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={openMenu ? "true" : undefined}
+                      >
+                        <MoreIcon sx={{ width: 24, height: 24 }} />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Typography>
               )}
-            </Typography>
-          )}
-          <Menu
-            anchorEl={anchorEl}
-            id="list-menu"
-            open={openMenu}
-            onClose={() => setAnchorEl(null)}
-            onClick={() => setAnchorEl(null)}
-            PaperProps={{
-              elevation: 0,
-              sx: style,
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <MenuItem onClick={() => setEdit(true)}>Rename List</MenuItem>
-            <MenuItem onClick={handleDelete}>Delete List</MenuItem>
-          </Menu>
-        </CardContent>
-      </Card>
-    </Styled>
+              <Menu
+                anchorEl={anchorEl}
+                id="list-menu"
+                open={openMenu}
+                onClose={() => setAnchorEl(null)}
+                onClick={() => setAnchorEl(null)}
+                PaperProps={{
+                  elevation: 0,
+                  sx: style,
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              >
+                <MenuItem onClick={() => setEdit(true)}>Rename List</MenuItem>
+                <MenuItem onClick={handleDelete}>Delete List</MenuItem>
+              </Menu>
+            </CardContent>
+          </Card>
+        </Styled>
+      )}
+    </Draggable>
   );
 };
 

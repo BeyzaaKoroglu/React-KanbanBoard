@@ -8,7 +8,12 @@ export type ListsResponseType = {
   }>;
 };
 
-export type CreateUpdateRequestPayload = {
+export type CreateRequestPayload = {
   title: string;
   boardId: number;
+};
+
+export type UpdateRequestPayload = {
+  title?: string;
+  order?: number;
 };

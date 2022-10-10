@@ -5,6 +5,7 @@
 ```sh
 Axios
 Material UI
+React Beautiful DnD
 React Router Dom
 Styled Components
 ```

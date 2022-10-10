@@ -6,4 +6,5 @@ export type ListItemProps = {
     updatedAt: string;
     createdAt: string;
   };
+  index: number;
 };

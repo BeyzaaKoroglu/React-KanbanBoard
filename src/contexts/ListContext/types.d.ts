@@ -3,6 +3,7 @@ export type ContextType = {
   addList: (newList: ListType) => void;
   deleteList: (id: number) => void;
   updateList: (newValues: ListType) => void;
+  DragDropList: (destination: number, source: number) => void;
 };
 
 export type StateType = {

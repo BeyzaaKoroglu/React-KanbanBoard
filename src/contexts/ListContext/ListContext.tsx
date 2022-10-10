@@ -9,6 +9,7 @@ import {
 import { list } from "../../services/endpoints/list";
 import { useBoardContext } from "../BoardContext/BoardContext";
 import { ContextType, ListType, StateType } from "./types";
+import { list as listServices } from "../../services/endpoints/list";
 
 const initialState: StateType = {
   lists: [],
@@ -19,6 +20,7 @@ export const ListContext = createContext<ContextType>({
   addList: () => {},
   deleteList: () => {},
   updateList: () => {},
+  DragDropList: () => {},
 });
 
 export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -52,21 +54,34 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const DragDropList = (destination: number, source: number) => {
+    const list = state.lists.splice(source, 1);
+    const newLists = [...state.lists];
+    newLists.splice(destination, 0, list[0]);
+    newLists.map((list, index) => {
+      listServices.update(list.id, { order: index });
+    });
+    setState({ lists: newLists });
+  };
+
   const values = {
     state,
     addList,
     deleteList,
     updateList,
+    DragDropList,
   };
   return <ListContext.Provider value={values}>{children}</ListContext.Provider>;
 };
 
 export const useListContext = () => {
-  const { state, addList, deleteList, updateList } = useContext(ListContext);
+  const { state, addList, deleteList, updateList, DragDropList } =
+    useContext(ListContext);
   return {
     lists: state.lists,
     addList,
     deleteList,
     updateList,
+    DragDropList,
   };
 };
