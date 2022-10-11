@@ -65,8 +65,8 @@ const Lists = () => {
             </div>
           )}
         </Droppable>
-        <Card sx={{ width: 250, margin: "15px" }}>
-          {edit ? (
+        {edit ? (
+          <Card sx={{ width: 250, margin: "15px", maxHeight: 125 }}>
             <CardContent>
               <TextField
                 variant="filled"
@@ -80,7 +80,16 @@ const Lists = () => {
               <Button onClick={handleAdd}>Add</Button>
               <Button onClick={handleCancel}>Cancel</Button>
             </CardContent>
-          ) : (
+          </Card>
+        ) : (
+          <Card
+            sx={{
+              width: 250,
+              margin: "15px",
+              maxHeight: 65,
+              background: "#F0f0f0",
+            }}
+          >
             <CardContent onClick={() => setEdit(true)}>
               <Typography variant="h6" component="span">
                 <AddCircleIcon
@@ -90,8 +99,8 @@ const Lists = () => {
                 Add a list
               </Typography>
             </CardContent>
-          )}
-        </Card>
+          </Card>
+        )}
       </DragDropContext>
     </Styled>
   );

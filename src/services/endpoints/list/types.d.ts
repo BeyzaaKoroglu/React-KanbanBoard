@@ -5,6 +5,7 @@ export type ListsResponseType = {
     boardId: number;
     updatedAt: string;
     createdAt: string;
+    cards: Array<Any>;
   }>;
 };
 

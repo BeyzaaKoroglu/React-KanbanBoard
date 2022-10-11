@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  Divider,
   IconButton,
   InputAdornment,
   Menu,
@@ -12,14 +13,17 @@ import {
 import MoreIcon from "@mui/icons-material/MoreVert";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 import { FC, useState } from "react";
 import { Styled } from "./ListItem.styled";
-import { ListItemProps } from "./ListItem.types";
+import { FormValuesTypes, ListItemProps } from "./ListItem.types";
 import { list as listServices } from "../../services/endpoints/list";
 import { useListContext } from "../../contexts/ListContext/ListContext";
 import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
 import { useLoginContext } from "../../contexts/LoginContext/LoginContext";
 import { Draggable } from "react-beautiful-dnd";
+import { card } from "../../services/endpoints/card";
+import CardList from "../CardList";
 
 const style = {
   overflow: "visible",
@@ -46,29 +50,35 @@ const style = {
 };
 
 const ListItem: FC<ListItemProps> = ({ list, index }) => {
-  const { deleteList, updateList } = useListContext();
+  const { deleteList, updateList, addCard } = useListContext();
   const { selectedBoard } = useBoardContext();
   const { userId } = useLoginContext();
   const [edit, setEdit] = useState<boolean>(false);
-  const [value, setValue] = useState<string>(list.title);
+  const [addNewCard, setAddNewCard] = useState<boolean>(false);
+  const [formValues, setFormValues] = useState<FormValuesTypes>({
+    listTitle: list.title,
+    cardTitle: "",
+  });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
   const handleRename = () => {
-    if (value !== "") {
-      listServices.update(list.id, { title: value }).then(({ data }) => {
-        updateList(data);
-        setEdit(false);
-      });
+    if (formValues.listTitle !== "") {
+      listServices
+        .update(list.id, { title: formValues.listTitle })
+        .then(({ data }) => {
+          updateList(data);
+          setEdit(false);
+        });
     }
   };
 
-  const handleCancel = () => {
-    setValue(list.title);
+  const handleCancelListEdit = () => {
+    setFormValues({ ...formValues, listTitle: "" });
     setEdit(false);
   };
 
@@ -76,6 +86,23 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
     listServices.destroy(list.id).then(() => {
       deleteList(list.id);
     });
+  };
+
+  const handleAddCard = () => {
+    if (formValues.cardTitle !== "") {
+      card
+        .create({ title: formValues.cardTitle, listId: list.id })
+        .then(({ data }) => {
+          addCard(list.id, data);
+          setAddNewCard(false);
+          setFormValues({ ...formValues, cardTitle: "" });
+        });
+    }
+  };
+
+  const handleCancelAddCard = () => {
+    setFormValues({ ...formValues, cardTitle: "" });
+    setAddNewCard(false);
   };
 
   return (
@@ -86,14 +113,14 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
           ref={provided.innerRef}
           {...provided.dragHandleProps}
         >
-          <Card sx={{ width: 250 }}>
+          <Card sx={{ width: 250, background: "#F0f0f0" }}>
             <CardContent>
               {edit ? (
                 <TextField
                   variant="standard"
                   type="text"
-                  value={value}
-                  name="title"
+                  value={formValues.listTitle}
+                  name="listTitle"
                   onChange={handleChange}
                   InputProps={{
                     endAdornment: (
@@ -106,7 +133,7 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
                         </IconButton>
                         <IconButton
                           aria-label="toggle password visibility"
-                          onClick={handleCancel}
+                          onClick={handleCancelListEdit}
                         >
                           <CloseIcon />
                         </IconButton>
@@ -150,6 +177,46 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
                 <MenuItem onClick={() => setEdit(true)}>Rename List</MenuItem>
                 <MenuItem onClick={handleDelete}>Delete List</MenuItem>
               </Menu>
+            </CardContent>
+
+            {list.cards && list.cards.length > 0 && (
+              <CardList cards={list.cards} />
+            )}
+            <Divider />
+
+            <CardContent sx={{ maxHeight: 20 }}>
+              {addNewCard ? (
+                <TextField
+                  variant="standard"
+                  type="text"
+                  value={formValues.cardTitle}
+                  name="cardTitle"
+                  onChange={handleChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleAddCard}
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleCancelAddCard}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              ) : (
+                <Typography variant="h6" onClick={() => setAddNewCard(true)}>
+                  <AddIcon sx={{ marginRight: 1, width: 24, height: 24 }} />
+                  Add a card
+                </Typography>
+              )}
             </CardContent>
           </Card>
         </Styled>
