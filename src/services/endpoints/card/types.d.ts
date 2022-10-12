@@ -20,4 +20,5 @@ export type UpdateRequestPayload = {
   description?: string;
   duedate?: Date | string;
   order?: number;
+  listId?: number;
 };

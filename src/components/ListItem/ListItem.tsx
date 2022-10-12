@@ -178,12 +178,10 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
                 <MenuItem onClick={handleDelete}>Delete List</MenuItem>
               </Menu>
             </CardContent>
-
             {list.cards && list.cards.length > 0 && (
-              <CardList cards={list.cards} />
+              <CardList listId={list.id} cards={list.cards} />
             )}
             <Divider />
-
             <CardContent sx={{ maxHeight: 20 }}>
               {addNewCard ? (
                 <TextField

@@ -4,10 +4,13 @@ export type ContextType = {
   deleteList: (id: number) => void;
   updateList: (newValues: ListType) => void;
   DragDropList: (destination: number, source: number) => void;
-
   addCard: (listId: number, newCard: CardType) => void;
   deleteCard: (listId: number, cardId: number) => void;
   updateCard: (newValues: CardType) => void;
+  DragDropCard: (
+    destination: DestinationSourceType,
+    source: DestinationSourceType
+  ) => void;
 };
 
 export type StateType = {
@@ -31,4 +34,9 @@ export type CardType = {
   createdAt: string;
   description: string;
   duedate: Date | undefined;
+};
+
+export type DestinationSourceType = {
+  index: number;
+  droppableId: string;
 };

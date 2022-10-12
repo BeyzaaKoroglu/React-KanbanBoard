@@ -13,10 +13,12 @@ import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
 import { useListContext } from "../../contexts/ListContext/ListContext";
 import ListItem from "../ListItem";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { useLoginContext } from "../../contexts/LoginContext/LoginContext";
 
 const Lists = () => {
   const { selectedBoard } = useBoardContext();
-  const { lists, addList, DragDropList } = useListContext();
+  const { userId } = useLoginContext();
+  const { lists, addList, DragDropList, DragDropCard } = useListContext();
   const [edit, setEdit] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
 
@@ -42,11 +44,16 @@ const Lists = () => {
   };
 
   const handleDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
+    const { destination, source, type } = result;
 
     if (!destination) return;
 
-    DragDropList(destination.index, source.index);
+    if (type === "list" && userId === selectedBoard.ownerId) {
+      DragDropList(destination.index, source.index);
+      return;
+    }
+
+    DragDropCard(destination, source);
     return;
   };
   return (
@@ -54,6 +61,7 @@ const Lists = () => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
           droppableId={String(selectedBoard.id)}
+          type="list"
           direction="horizontal"
         >
           {(provided) => (

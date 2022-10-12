@@ -1,5 +1,6 @@
 export type CardListItemProps = {
   card: CardType;
+  index: number;
 };
 
 export type CardType = {
@@ -10,6 +11,7 @@ export type CardType = {
   createdAt: string;
   description: string;
   duedate: Date | undefined;
+  order?: number;
 };
 
 export type NewValues = {

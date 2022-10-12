@@ -1,5 +1,6 @@
 export type CardListProps = {
   cards: Array<CardType>;
+  listId: number;
 };
 
 export type CardType = {

@@ -6,10 +6,16 @@ import {
   useEffect,
   useState,
 } from "react";
-import { list } from "../../services/endpoints/list";
 import { useBoardContext } from "../BoardContext/BoardContext";
-import { CardType, ContextType, ListType, StateType } from "./types";
+import {
+  CardType,
+  ContextType,
+  DestinationSourceType,
+  ListType,
+  StateType,
+} from "./types";
 import { list as listServices } from "../../services/endpoints/list";
+import { card as cardService } from "../../services/endpoints/card";
 
 const initialState: StateType = {
   lists: [],
@@ -24,6 +30,7 @@ export const ListContext = createContext<ContextType>({
   addCard: () => {},
   deleteCard: () => {},
   updateCard: () => {},
+  DragDropCard: () => {},
 });
 
 export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -31,9 +38,16 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
   const { selectedBoard } = useBoardContext();
 
   useEffect(() => {
-    list.getList(selectedBoard.id).then(({ data }) => {
+    listServices.getList(selectedBoard.id).then(({ data }) => {
+      const lists = data.map((list) => {
+        list.cards.sort(function (a, b) {
+          return a.order - b.order;
+        });
+        return list;
+      });
+
       setState({
-        lists: data,
+        lists: lists,
       });
     });
   }, [selectedBoard]);
@@ -61,7 +75,7 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
     const list = state.lists.splice(source, 1);
     const newLists = [...state.lists];
     newLists.splice(destination, 0, list[0]);
-    newLists.map((list, index) => {
+    newLists.forEach((list, index) => {
       listServices.update(list.id, { order: index });
     });
     setState({ lists: newLists });
@@ -103,6 +117,37 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const DragDropCard = (
+    destination: DestinationSourceType,
+    source: DestinationSourceType
+  ) => {
+    const sourceId = Number(source.droppableId);
+    const destinationId = Number(destination.droppableId);
+
+    const newLists = [...state.lists];
+    const sourceList = newLists.find((list) => list.id === sourceId);
+    const destinationList = newLists.find((list) => list.id === destinationId);
+
+    if (sourceList && destinationList) {
+      const card = sourceList.cards.splice(source.index, 1)[0];
+      destinationList.cards.splice(destination.index, 0, card);
+
+      setState({ lists: newLists });
+
+      if (destinationList.id !== sourceList.id) {
+        cardService.update(card.id, { listId: destinationId }).then(() => {
+          destinationList.cards.forEach((card, index) => {
+            cardService.update(card.id, { order: index });
+          });
+        });
+      } else {
+        destinationList.cards.forEach((card, index) => {
+          cardService.update(card.id, { order: index, listId: destinationId });
+        });
+      }
+    }
+  };
+
   const values = {
     state,
     addList,
@@ -112,6 +157,7 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
     addCard,
     deleteCard,
     updateCard,
+    DragDropCard,
   };
   return <ListContext.Provider value={values}>{children}</ListContext.Provider>;
 };
@@ -126,6 +172,7 @@ export const useListContext = () => {
     addCard,
     deleteCard,
     updateCard,
+    DragDropCard,
   } = useContext(ListContext);
   return {
     lists: state.lists,
@@ -136,5 +183,6 @@ export const useListContext = () => {
     addCard,
     deleteCard,
     updateCard,
+    DragDropCard,
   };
 };

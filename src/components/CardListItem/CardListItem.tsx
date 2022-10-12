@@ -6,8 +6,9 @@ import { CardListItemProps, NewValues } from "./CardListItem.types";
 import Visibility from "@mui/icons-material/Visibility";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useListContext } from "../../contexts/ListContext/ListContext";
+import { Draggable } from "react-beautiful-dnd";
 
-const CardListItem: FC<CardListItemProps> = ({ card }) => {
+const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
   const { updateCard } = useListContext();
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
@@ -22,32 +23,41 @@ const CardListItem: FC<CardListItemProps> = ({ card }) => {
   };
 
   return (
-    <Card sx={{ m: 2 }}>
-      <CardContent onClick={handleOpen}>
-        <Typography>{card.title}</Typography>
-        {card.duedate && (
-          <Typography
-            fontSize="14px"
-            sx={{
-              color: "white",
-              background: "red",
-              marginTop: 1,
-              textAlign: "center",
-              width: 100,
-              borderRadius: "15px",
-            }}
-          >
-            <AccessTimeIcon sx={{ marginTop: "1px", fontSize: "16px" }} />
-            {String(card.duedate)}
-          </Typography>
-        )}
-      </CardContent>
-      <Divider />
-      <CardContent sx={{ p: 1, height: 5 }} onClick={handleOpen}>
-        <Visibility color="disabled" fontSize="small" />
-      </CardContent>
-      <CardModal card={card} open={openModal} onClose={handleClose} />
-    </Card>
+    <Draggable draggableId={String(card.id)} index={index}>
+      {(provided) => (
+        <Card
+          sx={{ m: 2 }}
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+          {...provided.dragHandleProps}
+        >
+          <CardContent onClick={handleOpen}>
+            <Typography>{card.title}</Typography>
+            {card.duedate && (
+              <Typography
+                fontSize="14px"
+                sx={{
+                  color: "white",
+                  background: "red",
+                  marginTop: 1,
+                  textAlign: "center",
+                  width: 100,
+                  borderRadius: "15px",
+                }}
+              >
+                <AccessTimeIcon sx={{ marginTop: "1px", fontSize: "16px" }} />
+                {String(card.duedate)}
+              </Typography>
+            )}
+          </CardContent>
+          <Divider />
+          <CardContent sx={{ p: 1, height: 5 }} onClick={handleOpen}>
+            <Visibility color="disabled" fontSize="small" />
+          </CardContent>
+          <CardModal card={card} open={openModal} onClose={handleClose} />
+        </Card>
+      )}
+    </Draggable>
   );
 };
 
