@@ -45,25 +45,21 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
         });
         return list;
       });
-
-      setState({
-        lists: lists,
-      });
+      setState({ ...state, lists: lists });
     });
   }, [selectedBoard]);
 
   const addList = (newList: ListType) => {
-    setState({ lists: [...state.lists, newList] });
+    setState({ ...state, lists: [...state.lists, newList] });
   };
 
   const deleteList = (id: number) => {
-    setState({
-      lists: state.lists.filter((list) => list.id !== id),
-    });
+    setState({ ...state, lists: state.lists.filter((list) => list.id !== id) });
   };
 
   const updateList = (newValues: ListType) => {
     setState({
+      ...state,
       lists: state.lists.map((item) => {
         if (item.id === newValues.id) return newValues;
         return item;
@@ -78,11 +74,12 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
     newLists.forEach((list, index) => {
       listServices.update(list.id, { order: index });
     });
-    setState({ lists: newLists });
+    setState({ ...state, lists: newLists });
   };
 
   const addCard = (listId: number, newCard: CardType) => {
     setState({
+      ...state,
       lists: state.lists.map((list) => {
         if (list.id === listId) {
           if (list.cards) list.cards = [...list.cards, newCard];
@@ -95,6 +92,7 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const deleteCard = (listId: number, cardId: number) => {
     setState({
+      ...state,
       lists: state.lists.map((list) => {
         if (list.id === listId)
           list.cards = list.cards.filter((card) => card.id !== cardId);
@@ -105,6 +103,7 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const updateCard = (newValues: CardType) => {
     setState({
+      ...state,
       lists: state.lists.map((list) => {
         if (list.id === newValues.listId) {
           list.cards = list.cards.map((card) => {
@@ -132,7 +131,7 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
       const card = sourceList.cards.splice(source.index, 1)[0];
       destinationList.cards.splice(destination.index, 0, card);
 
-      setState({ lists: newLists });
+      setState({ ...state, lists: newLists });
 
       if (destinationList.id !== sourceList.id) {
         cardService.update(card.id, { listId: destinationId }).then(() => {

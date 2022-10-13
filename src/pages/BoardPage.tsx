@@ -4,6 +4,7 @@ import BoardHeader from "../components/BoardHeader";
 import BoardMembers from "../components/BoardMembers";
 import Lists from "../components/Lists";
 import { useBoardContext } from "../contexts/BoardContext/BoardContext";
+import { CardProvider } from "../contexts/CardContext/CardContext";
 import { ListProvider } from "../contexts/ListContext/ListContext";
 
 const BoardPage = () => {
@@ -25,14 +26,16 @@ const BoardPage = () => {
 
   return (
     <ListProvider>
-      <div>
-        <BoardHeader
-          onOpenModel={handleOpenModel}
-          onChangePage={handleChangePage}
-        />
-        <BoardMembers open={open} onClose={handleClose} />
-        <Lists />
-      </div>
+      <CardProvider>
+        <div>
+          <BoardHeader
+            onOpenModel={handleOpenModel}
+            onChangePage={handleChangePage}
+          />
+          <BoardMembers open={open} onClose={handleClose} />
+          <Lists />
+        </div>
+      </CardProvider>
     </ListProvider>
   );
 };

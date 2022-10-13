@@ -1,5 +1,4 @@
 export type CardModalProps = {
-  card: CardType;
   open: boolean;
   onClose: (newValues: FormValues) => void;
 };

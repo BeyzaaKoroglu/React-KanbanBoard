@@ -34,6 +34,7 @@ export type CardType = {
   createdAt: string;
   description: string;
   duedate: Date | undefined;
+  checklists?: Array<any>;
 };
 
 export type DestinationSourceType = {

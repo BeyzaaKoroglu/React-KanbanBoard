@@ -5,18 +5,21 @@ import { card as cardService } from "../../services/endpoints/card";
 import { CardListItemProps, NewValues } from "./CardListItem.types";
 import Visibility from "@mui/icons-material/Visibility";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useListContext } from "../../contexts/ListContext/ListContext";
 import { Draggable } from "react-beautiful-dnd";
+import { useCardContext } from "../../contexts/CardContext/CardContext";
 
 const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
-  const { updateCard } = useListContext();
+  const { setSelectedCard, updateSelectedCard } = useCardContext();
   const [openModal, setOpenModal] = useState(false);
-  const handleOpen = () => setOpenModal(true);
+  const handleOpen = () => {
+    setSelectedCard(card.id);
+    setOpenModal(true);
+  };
 
   const handleClose = (newValues: NewValues) => {
     if (newValues.title !== "") {
       cardService.update(card.id, newValues).then(({ data }) => {
-        updateCard(data);
+        updateSelectedCard(newValues);
       });
     }
     setOpenModal(false);
@@ -54,7 +57,7 @@ const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
           <CardContent sx={{ p: 1, height: 5 }} onClick={handleOpen}>
             <Visibility color="disabled" fontSize="small" />
           </CardContent>
-          <CardModal card={card} open={openModal} onClose={handleClose} />
+          <CardModal open={openModal} onClose={handleClose} />
         </Card>
       )}
     </Draggable>
