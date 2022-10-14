@@ -16,6 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { checklist as checklistService } from "../../services/endpoints/checklist";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
+import ItemList from "../ItemList";
 
 const style = {
   overflow: "visible",
@@ -42,7 +43,7 @@ const style = {
 };
 
 const ChecklistItem: FC<ChecklistItemProps> = ({ checklist }) => {
-  const { deleteChecklist, updateChecklist } = useCardContext();
+  const { deleteChecklist, updateChecklist, addItem } = useCardContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const [edit, setEdit] = useState<boolean>(false);
@@ -59,12 +60,13 @@ const ChecklistItem: FC<ChecklistItemProps> = ({ checklist }) => {
   };
   const handleCancelEdit = () => {
     setEdit(false);
-    setValue(checklist.title);
+    setValue(value);
   };
   const handleDelete = () => {
     checklistService.destroy(checklist.id);
     deleteChecklist(checklist.id);
   };
+
   return (
     <Box sx={{ paddingTop: 4 }}>
       {edit ? (
@@ -73,7 +75,7 @@ const ChecklistItem: FC<ChecklistItemProps> = ({ checklist }) => {
           variant="standard"
           type="text"
           value={value}
-          name="listTitle"
+          name="checklistTitle"
           onChange={handleChange}
           InputProps={{
             endAdornment: (
@@ -121,6 +123,11 @@ const ChecklistItem: FC<ChecklistItemProps> = ({ checklist }) => {
           marginTop: "-16px",
         }}
       />
+      <ItemList
+        checklistId={checklist.id}
+        items={checklist.items ? checklist.items : []}
+      />
+
       <Menu
         anchorEl={anchorEl}
         id="checklist-menu"

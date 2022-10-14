@@ -12,6 +12,9 @@ export type CardType = {
   description: string;
   duedate: Date | undefined;
   order?: number;
+  checklists?: Array<{
+    items: Array<any>;
+  }>;
 };
 
 export type NewValues = {

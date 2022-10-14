@@ -5,6 +5,9 @@ export type ContextType = {
   addChecklist: (newChecklist: ChecklistType) => void;
   deleteChecklist: (checklistId: number) => void;
   updateChecklist: (newChecklist: ChecklistType) => void;
+  addItem: (newItem: ItemType) => void;
+  deleteItem: (checklistId: number, itemId: number) => void;
+  updateItem: (newValues: ItemType) => void;
 };
 
 export type StateType = {
@@ -19,7 +22,7 @@ export type CardType = {
   createdAt: string;
   description: string;
   duedate: Date | undefined;
-  checklists: Array<checklist>;
+  checklists: Array<ChecklistType>;
 };
 
 export type NewValues = {
@@ -34,4 +37,12 @@ export type ChecklistType = {
   title: string;
   updatedAt: string;
   createdAt: string;
+  items?: Array<ItemType>;
+};
+
+export type ItemType = {
+  id: number;
+  checklistId: number;
+  title: string;
+  isChecked: boolean;
 };

@@ -8,7 +8,13 @@ import {
 } from "react";
 import { card } from "../../services/endpoints/card";
 import { useListContext } from "../ListContext/ListContext";
-import { ChecklistType, ContextType, NewValues, StateType } from "./types";
+import {
+  ChecklistType,
+  ContextType,
+  ItemType,
+  NewValues,
+  StateType,
+} from "./types";
 
 const initialState: StateType = {
   selectedCard: {
@@ -30,6 +36,9 @@ export const CardContext = createContext<ContextType>({
   addChecklist: () => {},
   deleteChecklist: () => {},
   updateChecklist: () => {},
+  addItem: () => {},
+  deleteItem: () => {},
+  updateItem: () => {},
 });
 
 export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -59,7 +68,7 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const addChecklist = (newChecklist: ChecklistType) => {
     const checklists = [...state.selectedCard.checklists];
-    checklists.push(newChecklist);
+    checklists.push({ ...newChecklist, items: [] });
     setState({
       selectedCard: { ...state.selectedCard, checklists: checklists },
     });
@@ -84,6 +93,49 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const addItem = (newItem: ItemType) => {
+    let checklists = [...state.selectedCard.checklists];
+    checklists = checklists.map((checklist) => {
+      if (checklist.items && checklist.id === newItem.checklistId)
+        checklist.items.push(newItem);
+
+      return checklist;
+    });
+    setState({
+      selectedCard: { ...state.selectedCard, checklists: checklists },
+    });
+  };
+
+  const deleteItem = (checklistId: number, itemId: number) => {
+    let checklists = [...state.selectedCard.checklists];
+    checklists = checklists.map((checklist) => {
+      if (checklist.id === checklistId)
+        checklist.items = checklist.items?.filter((item) => item.id !== itemId);
+      return checklist;
+    });
+
+    setState({
+      selectedCard: { ...state.selectedCard, checklists: checklists },
+    });
+  };
+
+  const updateItem = (newValues: ItemType) => {
+    let checklists = [...state.selectedCard.checklists];
+    checklists = checklists.map((checklist) => {
+      if (checklist.id === newValues.checklistId)
+        checklist.items = checklist.items?.map((item) => {
+          if (item.id === newValues.id) return newValues;
+
+          return item;
+        });
+      return checklist;
+    });
+
+    setState({
+      selectedCard: { ...state.selectedCard, checklists: checklists },
+    });
+  };
+
   const values = {
     state,
     setSelectedCard,
@@ -91,6 +143,9 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     addChecklist,
     deleteChecklist,
     updateChecklist,
+    addItem,
+    deleteItem,
+    updateItem,
   };
 
   return <CardContext.Provider value={values}>{children}</CardContext.Provider>;
@@ -104,6 +159,9 @@ export const useCardContext = () => {
     addChecklist,
     deleteChecklist,
     updateChecklist,
+    addItem,
+    deleteItem,
+    updateItem,
   } = useContext(CardContext);
   return {
     selectedCard: state.selectedCard,
@@ -112,5 +170,8 @@ export const useCardContext = () => {
     addChecklist,
     deleteChecklist,
     updateChecklist,
+    addItem,
+    deleteItem,
+    updateItem,
   };
 };
