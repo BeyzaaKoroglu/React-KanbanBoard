@@ -13,6 +13,7 @@ import { CardModalProps, FormValues } from "./CardModal.types";
 import Visibility from "@mui/icons-material/Visibility";
 import CheckLists from "../CheckLists";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
+import Labels from "../Labels";
 
 const style = {
   position: "absolute" as "absolute",
@@ -90,6 +91,7 @@ const CardModal: FC<CardModalProps> = ({ open, onClose }) => {
             fullWidth
             rows="3"
           />
+          {selectedCard.labels.length > 0 && <Labels />}
           {selectedCard.checklists.length > 0 && <CheckLists />}
         </Box>
       </Box>

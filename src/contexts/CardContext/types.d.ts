@@ -1,3 +1,5 @@
+import { LabelType } from "../../services/endpoints/label/types";
+
 export type ContextType = {
   state: StateType;
   setSelectedCard: (id: number) => void;
@@ -8,6 +10,8 @@ export type ContextType = {
   addItem: (newItem: ItemType) => void;
   deleteItem: (checklistId: number, itemId: number) => void;
   updateItem: (newValues: ItemType) => void;
+  addLabel: (newLabel: LabelType) => void;
+  deleteLabel: (id: number) => void;
 };
 
 export type StateType = {
@@ -23,6 +27,7 @@ export type CardType = {
   description: string;
   duedate: Date | undefined;
   checklists: Array<ChecklistType>;
+  labels: Array<LabelType>;
 };
 
 export type NewValues = {

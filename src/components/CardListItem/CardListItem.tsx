@@ -49,7 +49,17 @@ const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
           {...provided.dragHandleProps}
         >
           <CardContent onClick={handleOpen}>
-            <Typography>{card.title}</Typography>
+            {card.labels && card.labels.length > 0 && (
+              <div
+                style={{
+                  backgroundColor: card.labels[0].color,
+                  height: "5px",
+                  width: "30px",
+                  borderRadius: "3px",
+                }}
+              ></div>
+            )}
+            <Typography sx={{ marginTop: 1 }}>{card.title}</Typography>
             {card.duedate && (
               <Typography
                 fontSize="14px"
@@ -57,8 +67,9 @@ const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
                   float: "left",
                   color: "white",
                   background: "red",
-                  m: 1,
+                  marginY: 2,
                   marginLeft: 0,
+                  marginRight: 1,
                   textAlign: "center",
                   width: 100,
                   borderRadius: "15px",
@@ -75,7 +86,7 @@ const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
                   float: "left",
                   color: "white",
                   background: "#9e9e9e",
-                  m: 1,
+                  marginY: 2,
                   marginLeft: 0,
                   textAlign: "center",
                   width: 50,

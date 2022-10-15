@@ -15,6 +15,9 @@ export type CardType = {
   checklists?: Array<{
     items: Array<any>;
   }>;
+  labels?: Array<{
+    color: string;
+  }>;
 };
 
 export type NewValues = {

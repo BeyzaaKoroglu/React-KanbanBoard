@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { card } from "../../services/endpoints/card";
+import { LabelType } from "../../services/endpoints/label/types";
 import { useListContext } from "../ListContext/ListContext";
 import {
   ChecklistType,
@@ -26,6 +27,7 @@ const initialState: StateType = {
     description: "",
     duedate: undefined,
     checklists: [],
+    labels: [],
   },
 };
 
@@ -39,6 +41,8 @@ export const CardContext = createContext<ContextType>({
   addItem: () => {},
   deleteItem: () => {},
   updateItem: () => {},
+  addLabel: () => {},
+  deleteLabel: () => {},
 });
 
 export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -136,6 +140,20 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const addLabel = (newLabel: LabelType) => {
+    const labels = [...state.selectedCard.labels, newLabel];
+    setState({
+      selectedCard: { ...state.selectedCard, labels },
+    });
+  };
+
+  const deleteLabel = (id: number) => {
+    const labels = state.selectedCard.labels.filter((label) => label.id !== id);
+    setState({
+      selectedCard: { ...state.selectedCard, labels },
+    });
+  };
+
   const values = {
     state,
     setSelectedCard,
@@ -146,6 +164,8 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     addItem,
     deleteItem,
     updateItem,
+    addLabel,
+    deleteLabel,
   };
 
   return <CardContext.Provider value={values}>{children}</CardContext.Provider>;
@@ -162,6 +182,8 @@ export const useCardContext = () => {
     addItem,
     deleteItem,
     updateItem,
+    addLabel,
+    deleteLabel,
   } = useContext(CardContext);
   return {
     selectedCard: state.selectedCard,
@@ -173,5 +195,7 @@ export const useCardContext = () => {
     addItem,
     deleteItem,
     updateItem,
+    addLabel,
+    deleteLabel,
   };
 };

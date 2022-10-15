@@ -11,13 +11,17 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import CheckIcon from "@mui/icons-material/Check";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import TodayIcon from "@mui/icons-material/Today";
+import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import { Styled } from "./CardHeader.styled";
-import { useState, FC, ChangeEvent } from "react";
+import { useState, FC, ChangeEvent, useEffect } from "react";
 import { CardHeaderProps } from "./CardHeader.types";
 import { useListContext } from "../../contexts/ListContext/ListContext";
 import { card } from "../../services/endpoints/card";
 import { checklist } from "../../services/endpoints/checklist";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
+import { label } from "../../services/endpoints/label";
+import { LabelType } from "../../services/endpoints/label/types";
+import { cardLabel } from "../../services/endpoints/card-label";
 
 const style = {
   overflow: "visible",
@@ -45,8 +49,9 @@ const style = {
 
 const CardHeader: FC<CardHeaderProps> = ({ duedate, onChange }) => {
   const { deleteCard } = useListContext();
-  const { selectedCard, addChecklist } = useCardContext();
+  const { selectedCard, addChecklist, addLabel } = useCardContext();
   const [checklistTitle, setChecklistTitle] = useState<string>("");
+  const [labels, setLabels] = useState(Array<LabelType>);
 
   const [deleteAnchorEl, setDeleteAnchorEl] = useState<null | HTMLElement>(
     null
@@ -54,9 +59,23 @@ const CardHeader: FC<CardHeaderProps> = ({ duedate, onChange }) => {
   const openDeleteMenu = Boolean(deleteAnchorEl);
   const [dateAnchorEl, setDateAnchorEl] = useState<null | HTMLElement>(null);
   const openDateMenu = Boolean(dateAnchorEl);
+  const [labelsAnchorEl, setLabelsAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+  const openLabelsMenu = Boolean(labelsAnchorEl);
   const [checklistAnchorEl, setChecklistAnchorEl] =
     useState<null | HTMLElement>(null);
   const openChecklistMenu = Boolean(checklistAnchorEl);
+
+  useEffect(() => {
+    if (selectedCard.labels.length === 0) {
+      label.getList().then(({ data }) => {
+        setLabels(data);
+      });
+    } else {
+      setLabels([]);
+    }
+  }, [selectedCard.labels]);
 
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setChecklistTitle(e.target.value);
@@ -78,6 +97,18 @@ const CardHeader: FC<CardHeaderProps> = ({ duedate, onChange }) => {
     });
   };
 
+  const handleLabels = (id: number) => {
+    cardLabel
+      .create({ cardId: selectedCard.id, labelId: id })
+      .then(({ data }) => {
+        let label = labels.find((label) => label.id === id);
+        if (label) {
+          const cardlabel = { ...label, CardLabel: data };
+          addLabel(cardlabel);
+        }
+      });
+  };
+
   return (
     <Styled>
       <AppBar
@@ -93,6 +124,14 @@ const CardHeader: FC<CardHeaderProps> = ({ duedate, onChange }) => {
             aria-expanded={openDateMenu ? "true" : undefined}
           >
             <TodayIcon sx={{ color: "white" }} />
+          </IconButton>
+          <IconButton
+            onClick={(event) => setLabelsAnchorEl(event.currentTarget)}
+            aria-controls={openLabelsMenu ? "labels" : undefined}
+            aria-haspopup="true"
+            aria-expanded={openLabelsMenu ? "true" : undefined}
+          >
+            <LabelOutlinedIcon sx={{ color: "white" }} />
           </IconButton>
           <IconButton
             onClick={(event) => setChecklistAnchorEl(event.currentTarget)}
@@ -132,6 +171,25 @@ const CardHeader: FC<CardHeaderProps> = ({ duedate, onChange }) => {
               name="duedate"
             />
           </MenuItem>
+        </Menu>
+        <Menu
+          anchorEl={labelsAnchorEl}
+          id="labels"
+          open={openLabelsMenu}
+          onClose={() => setLabelsAnchorEl(null)}
+          onClick={() => setLabelsAnchorEl(null)}
+          PaperProps={{
+            elevation: 0,
+            sx: style,
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          {labels.map((label) => (
+            <MenuItem key={label.id} onClick={() => handleLabels(label.id)}>
+              {label.title}
+            </MenuItem>
+          ))}
         </Menu>
         <Menu
           anchorEl={checklistAnchorEl}
