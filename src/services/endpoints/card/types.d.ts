@@ -1,6 +1,7 @@
 export type CreateRequestPayload = {
   title: string;
   listId: number;
+  order: number;
 };
 
 export type CreateResponsePayload = {

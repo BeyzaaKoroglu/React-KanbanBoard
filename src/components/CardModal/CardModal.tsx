@@ -4,6 +4,7 @@ import {
   Modal,
   TextField,
   InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
@@ -11,6 +12,7 @@ import { useListContext } from "../../contexts/ListContext/ListContext";
 import CardHeader from "../CardHeader";
 import { CardModalProps, FormValues } from "./CardModal.types";
 import Visibility from "@mui/icons-material/Visibility";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CheckLists from "../CheckLists";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
 import Labels from "../Labels";
@@ -53,6 +55,10 @@ const CardModal: FC<CardModalProps> = ({ open, onClose }) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
+  const handleDeleteDuedate = () => {
+    setFormValues({ ...formValues, duedate: undefined });
+  };
+
   return (
     <Modal
       open={open}
@@ -65,6 +71,25 @@ const CardModal: FC<CardModalProps> = ({ open, onClose }) => {
         <Box sx={{ p: 4 }}>
           <Typography variant="h6" component="h2">
             {selectedBoard.title + " > " + listTitle}
+            {formValues.duedate && (
+              <Box
+                sx={{
+                  float: "right",
+                  paddingY: 1,
+                  paddingLeft: 2,
+                  paddingRight: 0,
+                  border: "1px solid #cbcbcb",
+                }}
+              >
+                {String(formValues.duedate)}
+                <IconButton
+                  onClick={handleDeleteDuedate}
+                  sx={{ marginTop: "-5px", marginLeft: 3 }}
+                >
+                  <HighlightOffIcon />
+                </IconButton>
+              </Box>
+            )}
           </Typography>
           <TextField
             required

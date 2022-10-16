@@ -50,6 +50,7 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [selectedBoard]);
 
   const addList = (newList: ListType) => {
+    newList = { ...newList, cards: [] };
     setState({ ...state, lists: [...state.lists, newList] });
   };
 
@@ -133,17 +134,14 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
 
       setState({ ...state, lists: newLists });
 
-      if (destinationList.id !== sourceList.id) {
-        cardService.update(card.id, { listId: destinationId }).then(() => {
-          destinationList.cards.forEach((card, index) => {
-            cardService.update(card.id, { order: index });
-          });
-        });
-      } else {
+      cardService.update(card.id, { listId: destinationId }).then(() => {
         destinationList.cards.forEach((card, index) => {
-          cardService.update(card.id, { order: index, listId: destinationId });
+          cardService.update(card.id, { order: index });
         });
-      }
+        sourceList.cards.forEach((card, index) => {
+          cardService.update(card.id, { order: index });
+        });
+      });
     }
   };
 

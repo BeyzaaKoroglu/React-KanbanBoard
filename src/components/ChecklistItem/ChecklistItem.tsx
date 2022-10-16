@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { ChecklistItemProps } from "./ChecklistItem.types";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CheckIcon from "@mui/icons-material/Check";
@@ -43,11 +43,20 @@ const style = {
 };
 
 const ChecklistItem: FC<ChecklistItemProps> = ({ checklist }) => {
-  const { deleteChecklist, updateChecklist, addItem } = useCardContext();
+  const { deleteChecklist, updateChecklist, selectedCard } = useCardContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const [edit, setEdit] = useState<boolean>(false);
   const [value, setValue] = useState<string>(checklist.title);
+  const [items, setItems] = useState({ allItems: 0, checkedItems: 0 });
+
+  useEffect(() => {
+    setItems({
+      allItems: checklist.items?.length || 0,
+      checkedItems:
+        checklist.items?.filter((item) => item.isChecked === true).length || 0,
+    });
+  }, [selectedCard.checklists]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -113,7 +122,9 @@ const ChecklistItem: FC<ChecklistItemProps> = ({ checklist }) => {
           </IconButton>
         </Typography>
       )}
-      <Typography variant="h6">0/0</Typography>
+      <Typography variant="h6">
+        {items.checkedItems}/{items.allItems}
+      </Typography>
       <Divider
         sx={{
           background: "blue",
@@ -127,7 +138,6 @@ const ChecklistItem: FC<ChecklistItemProps> = ({ checklist }) => {
         checklistId={checklist.id}
         items={checklist.items ? checklist.items : []}
       />
-
       <Menu
         anchorEl={anchorEl}
         id="checklist-menu"

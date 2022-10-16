@@ -91,7 +91,11 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
   const handleAddCard = () => {
     if (formValues.cardTitle !== "") {
       card
-        .create({ title: formValues.cardTitle, listId: list.id })
+        .create({
+          title: formValues.cardTitle,
+          listId: list.id,
+          order: list.cards.length,
+        })
         .then(({ data }) => {
           addCard(list.id, data);
           setAddNewCard(false);
@@ -178,9 +182,7 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
                 <MenuItem onClick={handleDelete}>Delete List</MenuItem>
               </Menu>
             </CardContent>
-            {list.cards && list.cards.length > 0 && (
-              <CardList listId={list.id} cards={list.cards} />
-            )}
+            <CardList listId={list.id} cards={list.cards} />
             <Divider />
             <CardContent sx={{ maxHeight: 20 }}>
               {addNewCard ? (

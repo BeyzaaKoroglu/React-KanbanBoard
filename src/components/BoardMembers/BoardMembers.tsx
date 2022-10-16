@@ -1,4 +1,11 @@
-import { Modal, Box, Typography } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  AppBar,
+  Toolbar,
+  Divider,
+} from "@mui/material";
 import { FC, useState, useEffect } from "react";
 import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
 import { auth } from "../../services/endpoints/auth";
@@ -10,11 +17,12 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 300,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
+  borderRadius: "20px",
+  overflowY: "auto",
+  maxHeight: "700px",
 };
 
 const BoardMembers: FC<BoardMembersProps> = ({ open, onClose }) => {
@@ -36,22 +44,46 @@ const BoardMembers: FC<BoardMembersProps> = ({ open, onClose }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={style}>
-        <Typography variant="h6" component="h2">
-          Board Members
-        </Typography>
-        {selectedBoard.members && selectedBoard.members.length > 0 ? (
-          selectedBoard.members.map((member) => (
-            <BoardMemberItem key={member.id} user={member} isMember={true} />
-          ))
-        ) : (
-          <Typography sx={{ mt: 2 }}>No members</Typography>
-        )}
-        <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
-          Add New Members
-        </Typography>
-        {users.map((user) => (
-          <BoardMemberItem key={user.id} user={user} isMember={false} />
-        ))}
+        <Box
+          sx={{
+            width: "100%",
+            borderRadius: "20px 20px 0 0",
+            background: "rgb(23, 37, 65)",
+            color: "white",
+          }}
+        >
+          <AppBar
+            position="static"
+            color="transparent"
+            sx={{ borderRadius: "20px" }}
+          >
+            <Toolbar>
+              <Typography variant="h6" component="h2">
+                Board Members
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        </Box>
+        <Box sx={{ p: 4, paddingTop: 1 }}>
+          {selectedBoard.members && selectedBoard.members.length > 0 ? (
+            selectedBoard.members.map((member) => (
+              <BoardMemberItem key={member.id} user={member} isMember={true} />
+            ))
+          ) : (
+            <Typography sx={{ mt: 2 }}>No members</Typography>
+          )}
+          <Divider />
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ mt: 2, textDecorationLine: "underline" }}
+          >
+            Add New Members
+          </Typography>
+          {users.map((user) => (
+            <BoardMemberItem key={user.id} user={user} isMember={false} />
+          ))}
+        </Box>
       </Box>
     </Modal>
   );

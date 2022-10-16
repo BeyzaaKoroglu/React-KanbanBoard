@@ -12,6 +12,7 @@ export type ListsResponseType = {
 export type CreateRequestPayload = {
   title: string;
   boardId: number;
+  order: number;
 };
 
 export type UpdateRequestPayload = {

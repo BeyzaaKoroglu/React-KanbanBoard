@@ -29,7 +29,11 @@ const Lists = () => {
   const handleAdd = () => {
     if (value !== "") {
       list
-        .create({ title: value, boardId: selectedBoard.id })
+        .create({
+          title: value,
+          boardId: selectedBoard.id,
+          order: lists.length,
+        })
         .then(({ data }) => {
           addList(data);
           setValue("");

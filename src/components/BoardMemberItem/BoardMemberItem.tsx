@@ -1,8 +1,10 @@
-import { Button, Typography } from "@mui/material";
+import { IconButton, Typography, Box } from "@mui/material";
 import { FC } from "react";
 import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
 import { boardMember } from "../../services/endpoints/board-member";
 import { BoardMemberItemProps } from "./BoardMemberItem.types";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const BoardMemberItem: FC<BoardMemberItemProps> = ({ user, isMember }) => {
   const { selectedBoard, updateBoard } = useBoardContext();
@@ -33,14 +35,28 @@ const BoardMemberItem: FC<BoardMemberItemProps> = ({ user, isMember }) => {
   };
 
   return (
-    <Typography sx={{ mt: 2 }}>
-      {user.username}{" "}
-      {isMember ? (
-        <Button onClick={handleDeleteMember}>Delete</Button>
-      ) : (
-        <Button onClick={handleAddMember}>Add</Button>
-      )}
-    </Typography>
+    <Box>
+      <Typography sx={{ mt: 1 }}>
+        {isMember ? (
+          <IconButton
+            onClick={handleAddMember}
+            edge="start"
+            sx={{ marginRight: 1, color: "red" }}
+          >
+            <CancelIcon fontSize="large" />
+          </IconButton>
+        ) : (
+          <IconButton
+            onClick={handleAddMember}
+            edge="start"
+            sx={{ marginRight: 1, color: "#1976d2" }}
+          >
+            <AddCircleIcon fontSize="large" />
+          </IconButton>
+        )}
+        {user.username}{" "}
+      </Typography>
+    </Box>
   );
 };
 
