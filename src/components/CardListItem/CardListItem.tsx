@@ -1,10 +1,11 @@
-import { Card, CardContent, Typography, Divider } from "@mui/material";
+import { Card, CardContent, Typography, Divider, Box } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import CardModal from "../CardModal";
 import { card as cardService } from "../../services/endpoints/card";
 import { CardListItemProps, NewValues } from "./CardListItem.types";
 import Visibility from "@mui/icons-material/Visibility";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import { Draggable } from "react-beautiful-dnd";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
 
@@ -99,7 +100,19 @@ const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
           </CardContent>
           <Divider sx={{ width: "100%" }} />
           <CardContent sx={{ p: 1, height: 5 }} onClick={handleOpen}>
-            <Visibility color="disabled" fontSize="small" />
+            <Visibility
+              color="disabled"
+              fontSize="small"
+              sx={{ m: "-5px", marginLeft: "2px" }}
+            />
+            <Box sx={{ float: "right", color: "#bdbdbd" }}>
+              <CommentOutlinedIcon
+                color="disabled"
+                fontSize="small"
+                sx={{ m: "-5px", marginRight: "3px" }}
+              />
+              {card.comments?.length || 0}
+            </Box>
           </CardContent>
           <CardModal open={openModal} onClose={handleClose} />
         </Card>

@@ -1,3 +1,5 @@
+import { CommentType } from "../../services/endpoints/comment/types";
+
 export type CardListItemProps = {
   card: CardType;
   index: number;
@@ -18,6 +20,7 @@ export type CardType = {
   labels?: Array<{
     color: string;
   }>;
+  comments?: Array<CommentType>;
 };
 
 export type NewValues = {

@@ -1,3 +1,4 @@
+import { CommentType } from "../../services/endpoints/comment/types";
 import { LabelType } from "../../services/endpoints/label/types";
 
 export type ContextType = {
@@ -12,6 +13,8 @@ export type ContextType = {
   updateItem: (newValues: ItemType) => void;
   addLabel: (newLabel: LabelType) => void;
   deleteLabel: (id: number) => void;
+  addComment: (newComment: CommentType) => void;
+  deleteComment: (id: number) => void;
 };
 
 export type StateType = {
@@ -28,6 +31,7 @@ export type CardType = {
   duedate: Date | undefined;
   checklists: Array<ChecklistType>;
   labels: Array<LabelType>;
+  comments: Array<CommentType>;
 };
 
 export type NewValues = {

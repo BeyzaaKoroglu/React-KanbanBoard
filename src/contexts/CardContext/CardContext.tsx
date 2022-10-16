@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { card } from "../../services/endpoints/card";
+import { CommentType } from "../../services/endpoints/comment/types";
 import { LabelType } from "../../services/endpoints/label/types";
 import { useListContext } from "../ListContext/ListContext";
 import {
@@ -28,6 +29,7 @@ const initialState: StateType = {
     duedate: undefined,
     checklists: [],
     labels: [],
+    comments: [],
   },
 };
 
@@ -43,6 +45,8 @@ export const CardContext = createContext<ContextType>({
   updateItem: () => {},
   addLabel: () => {},
   deleteLabel: () => {},
+  addComment: () => {},
+  deleteComment: () => {},
 });
 
 export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -154,6 +158,22 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const addComment = (newComent: CommentType) => {
+    const comments = [...state.selectedCard.comments, newComent];
+    setState({
+      selectedCard: { ...state.selectedCard, comments },
+    });
+  };
+
+  const deleteComment = (id: number) => {
+    const comments = state.selectedCard.comments.filter(
+      (comment) => comment.id !== id
+    );
+    setState({
+      selectedCard: { ...state.selectedCard, comments },
+    });
+  };
+
   const values = {
     state,
     setSelectedCard,
@@ -166,6 +186,8 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     updateItem,
     addLabel,
     deleteLabel,
+    addComment,
+    deleteComment,
   };
 
   return <CardContext.Provider value={values}>{children}</CardContext.Provider>;
@@ -184,6 +206,8 @@ export const useCardContext = () => {
     updateItem,
     addLabel,
     deleteLabel,
+    addComment,
+    deleteComment,
   } = useContext(CardContext);
   return {
     selectedCard: state.selectedCard,
@@ -197,5 +221,7 @@ export const useCardContext = () => {
     updateItem,
     addLabel,
     deleteLabel,
+    addComment,
+    deleteComment,
   };
 };

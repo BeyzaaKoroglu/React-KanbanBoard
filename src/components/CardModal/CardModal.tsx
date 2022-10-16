@@ -14,6 +14,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import CheckLists from "../CheckLists";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
 import Labels from "../Labels";
+import CommentList from "../CommentList";
 
 const style = {
   position: "absolute" as "absolute",
@@ -93,6 +94,7 @@ const CardModal: FC<CardModalProps> = ({ open, onClose }) => {
           />
           {selectedCard.labels.length > 0 && <Labels />}
           {selectedCard.checklists.length > 0 && <CheckLists />}
+          <CommentList />
         </Box>
       </Box>
     </Modal>
