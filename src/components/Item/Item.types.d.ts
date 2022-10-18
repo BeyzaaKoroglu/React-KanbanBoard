@@ -1,10 +1,5 @@
-export type ItemProps = {
-  item: ItemType;
-};
+import { ChecklistItemType } from "../../services/endpoints/checklist-item/types";
 
-export type ItemType = {
-  id: number;
-  checklistId: number;
-  title: string;
-  isChecked: boolean;
+export type ItemProps = {
+  item: ChecklistItemType;
 };

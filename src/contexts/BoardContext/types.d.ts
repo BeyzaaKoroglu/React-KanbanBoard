@@ -1,3 +1,5 @@
+import { BoardType } from "../../services/endpoints/board/types";
+
 export type ContextType = {
   state: StateType;
   addBoard: (newBoard: BoardType) => void;
@@ -7,17 +9,6 @@ export type ContextType = {
 };
 
 export type StateType = {
-  boards: BoardsType;
+  boards: Array<BoardType>;
   selectedBoard: BoardType;
-};
-
-export type BoardsType = Array<BoardType>;
-
-export type BoardType = {
-  id: number;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  ownerId: number;
-  members: Array<any>;
 };

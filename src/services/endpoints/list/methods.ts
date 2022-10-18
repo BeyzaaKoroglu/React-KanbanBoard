@@ -1,11 +1,11 @@
 import instance from "../../instance";
 import {
   CreateRequestPayload,
-  ListsResponseType,
+  CreateResponseType,
   UpdateRequestPayload,
 } from "./types";
 
-export const getList = (id: number): Promise<ListsResponseType> =>
+export const getList = (id: number): Promise<CreateResponseType> =>
   instance.get(`list?boardId=${id}`);
 
 export const create = (payload: CreateRequestPayload) =>

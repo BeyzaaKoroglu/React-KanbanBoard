@@ -1,3 +1,4 @@
+import { CardType } from "../../services/endpoints/card/types";
 import { CommentType } from "../../services/endpoints/comment/types";
 import { LabelType } from "../../services/endpoints/label/types";
 
@@ -21,37 +22,8 @@ export type StateType = {
   selectedCard: CardType;
 };
 
-export type CardType = {
-  id: number;
-  title: string;
-  listId: number;
-  updatedAt: string;
-  createdAt: string;
-  description: string;
-  duedate: Date | undefined;
-  checklists: Array<ChecklistType>;
-  labels: Array<LabelType>;
-  comments: Array<CommentType>;
-};
-
 export type NewValues = {
   title: string;
   description: string;
   duedate: Date | undefined;
-};
-
-export type ChecklistType = {
-  id: number;
-  cardId: number;
-  title: string;
-  updatedAt: string;
-  createdAt: string;
-  items?: Array<ItemType>;
-};
-
-export type ItemType = {
-  id: number;
-  checklistId: number;
-  title: string;
-  isChecked: boolean;
 };

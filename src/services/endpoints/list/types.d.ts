@@ -1,12 +1,14 @@
-export type ListsResponseType = {
-  data: Array<{
-    id: number;
-    title: string;
-    boardId: number;
-    updatedAt: string;
-    createdAt: string;
-    cards: Array<Any>;
-  }>;
+import { CardType } from "../card/types";
+
+export type CreateResponseType = {
+  data: Array<ListType>;
+};
+
+export type ListType = {
+  id: number;
+  title: string;
+  boardId: number;
+  cards: Array<CardType>;
 };
 
 export type CreateRequestPayload = {

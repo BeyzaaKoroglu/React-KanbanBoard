@@ -47,7 +47,11 @@ const style = {
   },
 };
 
-const CardHeader: FC<CardHeaderProps> = ({ duedate, onChange }) => {
+const CardHeader: FC<CardHeaderProps> = ({
+  duedate,
+  onChange,
+  onDeleteDuedate,
+}) => {
   const { deleteCard } = useListContext();
   const { selectedCard, addChecklist, addLabel } = useCardContext();
   const [checklistTitle, setChecklistTitle] = useState<string>("");
@@ -162,15 +166,18 @@ const CardHeader: FC<CardHeaderProps> = ({ duedate, onChange }) => {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          <MenuItem>
-            <TextField
-              fullWidth
-              onChange={onChange}
-              type="date"
-              value={duedate}
-              name="duedate"
-            />
-          </MenuItem>
+          {duedate ? (
+            <MenuItem onClick={onDeleteDuedate}>Delete Duedate</MenuItem>
+          ) : (
+            <MenuItem>
+              <TextField
+                fullWidth
+                onChange={onChange}
+                type="date"
+                name="duedate"
+              />
+            </MenuItem>
+          )}
         </Menu>
         <Menu
           anchorEl={labelsAnchorEl}

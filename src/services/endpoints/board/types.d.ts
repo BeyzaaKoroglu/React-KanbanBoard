@@ -1,3 +1,5 @@
+import { UserType } from "../auth/types";
+
 export type BoardListResponseType = {
   data: Array<BoardType>;
 };
@@ -5,10 +7,8 @@ export type BoardListResponseType = {
 export type BoardType = {
   id: number;
   title: string;
-  createdAt: string;
-  updatedAt: string;
-  ownerId: 5;
-  members: Array<any>;
+  ownerId: number;
+  members: Array<UserType>;
 };
 
 export type BoardResponseType = {

@@ -19,7 +19,7 @@ const CommentList = () => {
     comment
       .create({ cardId: selectedCard.id, message: value })
       .then(({ data }) => {
-        data = { ...data, author: { username } };
+        data = { ...data, author: { id: data.authorId, username } };
         addComment(data);
         setValue("");
       });

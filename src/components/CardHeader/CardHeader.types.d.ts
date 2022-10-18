@@ -1,4 +1,5 @@
 export type CardHeaderProps = {
-  duedate: Date | undefined;
+  duedate: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDeleteDuedate: () => void;
 };

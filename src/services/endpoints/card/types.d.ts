@@ -1,3 +1,6 @@
+import { ChecklistType } from "../checklist/types";
+import { LabelType } from "../label/types";
+
 export type CreateRequestPayload = {
   title: string;
   listId: number;
@@ -5,15 +8,19 @@ export type CreateRequestPayload = {
 };
 
 export type CreateResponsePayload = {
-  data: {
-    id: number;
-    title: string;
-    listId: number;
-    updatedAt: string;
-    createdAt: string;
-    description: string;
-    duedate: Date | undefined;
-  };
+  data: CardType;
+};
+
+export type CardType = {
+  id: number;
+  title: string;
+  listId: number;
+  description: string;
+  duedate: Date | undefined;
+  order: number;
+  checklists: Array<ChecklistType>;
+  labels: Array<LabelType>;
+  comments: Array<CommentType>;
 };
 
 export type UpdateRequestPayload = {

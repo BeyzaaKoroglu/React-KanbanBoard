@@ -7,15 +7,11 @@ import {
   useState,
 } from "react";
 import { useBoardContext } from "../BoardContext/BoardContext";
-import {
-  CardType,
-  ContextType,
-  DestinationSourceType,
-  ListType,
-  StateType,
-} from "./types";
+import { ContextType, DestinationSourceType, StateType } from "./types";
 import { list as listServices } from "../../services/endpoints/list";
 import { card as cardService } from "../../services/endpoints/card";
+import { ListType } from "../../services/endpoints/list/types";
+import { CardType } from "../../services/endpoints/card/types";
 
 const initialState: StateType = {
   lists: [],
@@ -62,7 +58,7 @@ export const ListProvider: FC<PropsWithChildren> = ({ children }) => {
     setState({
       ...state,
       lists: state.lists.map((item) => {
-        if (item.id === newValues.id) return newValues;
+        if (item.id === newValues.id) item = { ...item, ...newValues };
         return item;
       }),
     });

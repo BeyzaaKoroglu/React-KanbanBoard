@@ -14,8 +14,11 @@ const BoardMemberItem: FC<BoardMemberItemProps> = ({ user, isMember }) => {
       .create({ username: user.username, boardId: selectedBoard.id })
       .then(({ data }) => {
         user.BoardMember = data;
-        const board = { ...selectedBoard, members: [...selectedBoard.members] };
-        board.members.push(user);
+        if (!selectedBoard.members) selectedBoard.members = [];
+        const board = {
+          ...selectedBoard,
+          members: [...selectedBoard.members, user],
+        };
         updateBoard(board);
       });
   };
@@ -25,13 +28,15 @@ const BoardMemberItem: FC<BoardMemberItemProps> = ({ user, isMember }) => {
       (member) => member.id === user.id
     );
 
-    boardMember.destroy(member.BoardMember.id).then(() => {
-      const board = { ...selectedBoard };
-      board.members = selectedBoard.members.filter(
-        (item) => item.id !== member.id
-      );
-      updateBoard(board);
-    });
+    if (member?.BoardMember) {
+      boardMember.destroy(member.BoardMember.id).then(() => {
+        const board = { ...selectedBoard };
+        board.members = selectedBoard.members.filter(
+          (item) => item.id !== member.id
+        );
+        updateBoard(board);
+      });
+    }
   };
 
   return (
@@ -39,7 +44,7 @@ const BoardMemberItem: FC<BoardMemberItemProps> = ({ user, isMember }) => {
       <Typography sx={{ mt: 1 }}>
         {isMember ? (
           <IconButton
-            onClick={handleAddMember}
+            onClick={handleDeleteMember}
             edge="start"
             sx={{ marginRight: 1, color: "red" }}
           >

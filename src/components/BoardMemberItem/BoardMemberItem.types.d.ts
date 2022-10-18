@@ -1,4 +1,6 @@
+import { UserType } from "../../services/endpoints/auth/types";
+
 export type BoardMemberItemProps = {
-  user: any;
+  user: UserType;
   isMember: boolean;
 };

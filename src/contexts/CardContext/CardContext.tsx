@@ -7,24 +7,19 @@ import {
   useState,
 } from "react";
 import { card } from "../../services/endpoints/card";
+import { ChecklistItemType } from "../../services/endpoints/checklist-item/types";
+import { ChecklistType } from "../../services/endpoints/checklist/types";
 import { CommentType } from "../../services/endpoints/comment/types";
 import { LabelType } from "../../services/endpoints/label/types";
 import { useListContext } from "../ListContext/ListContext";
-import {
-  ChecklistType,
-  ContextType,
-  ItemType,
-  NewValues,
-  StateType,
-} from "./types";
+import { ContextType, NewValues, StateType } from "./types";
 
 const initialState: StateType = {
   selectedCard: {
     id: -1,
     title: "",
     listId: -1,
-    updatedAt: "",
-    createdAt: "",
+    order: -1,
     description: "",
     duedate: undefined,
     checklists: [],
@@ -101,7 +96,7 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
-  const addItem = (newItem: ItemType) => {
+  const addItem = (newItem: ChecklistItemType) => {
     let checklists = [...state.selectedCard.checklists];
     checklists = checklists.map((checklist) => {
       if (checklist.items && checklist.id === newItem.checklistId)
@@ -127,7 +122,7 @@ export const CardProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
-  const updateItem = (newValues: ItemType) => {
+  const updateItem = (newValues: ChecklistItemType) => {
     let checklists = [...state.selectedCard.checklists];
     checklists = checklists.map((checklist) => {
       if (checklist.id === newValues.checklistId)

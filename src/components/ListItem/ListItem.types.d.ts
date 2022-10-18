@@ -1,12 +1,7 @@
+import { ListType } from "../../services/endpoints/list/types";
+
 export type ListItemProps = {
-  list: {
-    id: number;
-    title: string;
-    boardId: number;
-    updatedAt: string;
-    createdAt: string;
-    cards: Array<any>;
-  };
+  list: ListType;
   index: number;
 };
 

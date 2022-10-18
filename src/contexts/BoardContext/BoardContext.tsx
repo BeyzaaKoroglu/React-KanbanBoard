@@ -7,15 +7,14 @@ import {
   useState,
 } from "react";
 import { board } from "../../services/endpoints/board";
-import { BoardType, ContextType, StateType } from "./types";
+import { BoardType } from "../../services/endpoints/board/types";
+import { ContextType, StateType } from "./types";
 
 const initialState: StateType = {
   boards: [],
   selectedBoard: {
     id: -1,
     title: "",
-    createdAt: "",
-    updatedAt: "",
     ownerId: -1,
     members: [],
   },

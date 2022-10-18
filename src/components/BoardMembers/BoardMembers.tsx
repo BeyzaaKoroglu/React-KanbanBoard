@@ -9,8 +9,9 @@ import {
 import { FC, useState, useEffect } from "react";
 import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
 import { auth } from "../../services/endpoints/auth";
+import { UserType } from "../../services/endpoints/auth/types";
 import BoardMemberItem from "../BoardMemberItem";
-import { BoardMembersProps, UsersType } from "./BoardMembers.types";
+import { BoardMembersProps } from "./BoardMembers.types";
 
 const style = {
   position: "absolute" as "absolute",
@@ -27,7 +28,7 @@ const style = {
 
 const BoardMembers: FC<BoardMembersProps> = ({ open, onClose }) => {
   const { selectedBoard } = useBoardContext();
-  const [users, setUsers] = useState<UsersType>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
     auth.getUserList().then(({ data }) => {
@@ -35,7 +36,7 @@ const BoardMembers: FC<BoardMembersProps> = ({ open, onClose }) => {
         .filter((user) => user.id !== selectedBoard.ownerId)
         .filter(
           (user) =>
-            !selectedBoard.members.find((member) => user.id === member.id)
+            !selectedBoard.members?.find((member) => user.id === member.id)
         );
       setUsers(users);
     });

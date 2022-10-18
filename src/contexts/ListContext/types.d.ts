@@ -1,3 +1,5 @@
+import { ListType } from "../../services/endpoints/list/types";
+
 export type ContextType = {
   state: StateType;
   addList: (newList: ListType) => void;
@@ -15,26 +17,6 @@ export type ContextType = {
 
 export type StateType = {
   lists: Array<ListType>;
-};
-
-export type ListType = {
-  id: number;
-  title: string;
-  boardId: number;
-  updatedAt: string;
-  createdAt: string;
-  cards: Array<CardType>;
-};
-
-export type CardType = {
-  id: number;
-  title: string;
-  listId: number;
-  updatedAt: string;
-  createdAt: string;
-  description: string;
-  duedate: Date | undefined;
-  checklists?: Array<any>;
 };
 
 export type DestinationSourceType = {

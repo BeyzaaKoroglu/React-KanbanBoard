@@ -10,10 +10,13 @@ export type LoginRequestPayload = {
 };
 
 export type UsersResponseType = {
-  data: Array<{
+  data: Array<UserType>;
+};
+
+export type UserType = {
+  id: number;
+  username: string;
+  BoardMember?: {
     id: number;
-    username: string;
-    createdAt: string;
-    updatedAt: string;
-  }>;
+  };
 };
