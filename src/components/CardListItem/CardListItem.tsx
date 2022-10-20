@@ -76,7 +76,14 @@ const CardListItem: FC<CardListItemProps> = ({ card, index }) => {
                   borderRadius: "15px",
                 }}
               >
-                <AccessTimeIcon sx={{ marginTop: "1px", fontSize: "16px" }} />
+                <AccessTimeIcon
+                  sx={{
+                    marginBottom: "-3px",
+                    marginRight: "1px",
+                    marginTop: "1px",
+                    fontSize: "16px",
+                  }}
+                />
                 {String(card.duedate)}
               </Typography>
             )}

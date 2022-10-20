@@ -2,7 +2,6 @@ import {
   AppBar,
   IconButton,
   InputAdornment,
-  Menu,
   MenuItem,
   TextField,
   Toolbar,
@@ -22,30 +21,7 @@ import { useCardContext } from "../../contexts/CardContext/CardContext";
 import { label } from "../../services/endpoints/label";
 import { LabelType } from "../../services/endpoints/label/types";
 import { cardLabel } from "../../services/endpoints/card-label";
-
-const style = {
-  overflow: "visible",
-  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-  mt: 1.5,
-  "& .MuiAvatar-root": {
-    width: 32,
-    height: 32,
-    ml: -0.5,
-    mr: 1,
-  },
-  "&:before": {
-    content: '""',
-    display: "block",
-    position: "absolute",
-    top: 0,
-    right: 14,
-    width: 10,
-    height: 10,
-    bgcolor: "background.paper",
-    transform: "translateY(-50%) rotate(45deg)",
-    zIndex: 0,
-  },
-};
+import MenuComponent from "../MenuComponent";
 
 const CardHeader: FC<CardHeaderProps> = ({
   duedate,
@@ -154,17 +130,11 @@ const CardHeader: FC<CardHeaderProps> = ({
             <MoreIcon sx={{ color: "white" }} />
           </IconButton>
         </Toolbar>
-        <Menu
+        <MenuComponent
           anchorEl={dateAnchorEl}
           id="duedate-menu"
           open={openDateMenu}
           onClose={() => setDateAnchorEl(null)}
-          PaperProps={{
-            elevation: 0,
-            sx: style,
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
           {duedate ? (
             <MenuItem onClick={onDeleteDuedate}>Delete Duedate</MenuItem>
@@ -178,37 +148,25 @@ const CardHeader: FC<CardHeaderProps> = ({
               />
             </MenuItem>
           )}
-        </Menu>
-        <Menu
+        </MenuComponent>
+        <MenuComponent
           anchorEl={labelsAnchorEl}
           id="labels"
           open={openLabelsMenu}
           onClose={() => setLabelsAnchorEl(null)}
           onClick={() => setLabelsAnchorEl(null)}
-          PaperProps={{
-            elevation: 0,
-            sx: style,
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
           {labels.map((label) => (
             <MenuItem key={label.id} onClick={() => handleLabels(label.id)}>
               {label.title}
             </MenuItem>
           ))}
-        </Menu>
-        <Menu
+        </MenuComponent>
+        <MenuComponent
           anchorEl={checklistAnchorEl}
           id="checklist-menu"
           open={openChecklistMenu}
           onClose={() => setChecklistAnchorEl(null)}
-          PaperProps={{
-            elevation: 0,
-            sx: style,
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
           <MenuItem>
             <TextField
@@ -229,22 +187,16 @@ const CardHeader: FC<CardHeaderProps> = ({
               }}
             />
           </MenuItem>
-        </Menu>
-        <Menu
+        </MenuComponent>
+        <MenuComponent
           anchorEl={deleteAnchorEl}
           id="card-menu"
           open={openDeleteMenu}
           onClose={() => setDeleteAnchorEl(null)}
           onClick={() => setDeleteAnchorEl(null)}
-          PaperProps={{
-            elevation: 0,
-            sx: style,
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
           <MenuItem onClick={handleDeleteCard}>Delete Card</MenuItem>
-        </Menu>
+        </MenuComponent>
       </AppBar>
     </Styled>
   );

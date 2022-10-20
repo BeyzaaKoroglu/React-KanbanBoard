@@ -23,8 +23,11 @@ const Labels = () => {
 
   return (
     <Box sx={{ paddingTop: 4 }}>
-      <Typography variant="h6">
-        <LabelOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} />
+      <Typography variant="h6" sx={{ marginBottom: 1 }}>
+        <LabelOutlinedIcon
+          fontSize="medium"
+          sx={{ marginBottom: "-4px", marginRight: 1 }}
+        />
         Labels
       </Typography>
       <TextField

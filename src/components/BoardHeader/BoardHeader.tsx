@@ -9,7 +9,6 @@ import {
   Divider,
   IconButton,
   InputAdornment,
-  Menu,
   MenuItem,
   TextField,
   Toolbar,
@@ -21,6 +20,7 @@ import { useLoginContext } from "../../contexts/LoginContext/LoginContext";
 import { board } from "../../services/endpoints/board";
 import { Styled } from "./BoardHeader.styled";
 import { BoardHeaderProps } from "./BoardHeader.type";
+import MenuComponent from "../MenuComponent";
 
 const BoardHeader: FC<BoardHeaderProps> = ({ onOpenModel, onChangePage }) => {
   const { selectedBoard, updateBoard, deleteBoard } = useBoardContext();
@@ -112,17 +112,9 @@ const BoardHeader: FC<BoardHeaderProps> = ({ onOpenModel, onChangePage }) => {
           >
             <SettingsIcon />
           </IconButton>
-          <Menu
+          <MenuComponent
+            id=""
             anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
           >
@@ -137,7 +129,7 @@ const BoardHeader: FC<BoardHeaderProps> = ({ onOpenModel, onChangePage }) => {
               <LogoutIcon sx={{ marginRight: 1 }} />
               Logout
             </MenuItem>
-          </Menu>
+          </MenuComponent>
         </Toolbar>
       </AppBar>
     </Styled>

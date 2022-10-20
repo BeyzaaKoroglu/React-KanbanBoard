@@ -52,8 +52,10 @@ const Lists = () => {
 
     if (!destination) return;
 
-    if (type === "list" && userId === selectedBoard.ownerId) {
-      DragDropList(destination.index, source.index);
+    if (type === "list") {
+      if (userId === selectedBoard.ownerId)
+        DragDropList(destination.index, source.index);
+      else alert("You are not owner.\nYou can not change order of lists.");
       return;
     }
 
@@ -106,7 +108,8 @@ const Lists = () => {
               <Typography variant="h6" component="span">
                 <AddCircleIcon
                   color="error"
-                  sx={{ marginRight: 1, width: 24, height: 24 }}
+                  fontSize="large"
+                  sx={{ marginBottom: "-10px", marginRight: 1 }}
                 />
                 Add a list
               </Typography>

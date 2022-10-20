@@ -1,10 +1,4 @@
-import {
-  Typography,
-  Box,
-  Modal,
-  TextField,
-  InputAdornment,
-} from "@mui/material";
+import { Typography, Box, TextField, InputAdornment } from "@mui/material";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useBoardContext } from "../../contexts/BoardContext/BoardContext";
 import { useListContext } from "../../contexts/ListContext/ListContext";
@@ -15,19 +9,7 @@ import CheckLists from "../CheckLists";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
 import Labels from "../Labels";
 import CommentList from "../CommentList";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 700,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  borderRadius: "20px",
-  overflowY: "auto",
-  maxHeight: "700px",
-};
+import ModalComponent from "../ModalComponent";
 
 const CardModal: FC<CardModalProps> = ({ open, onClose }) => {
   const { selectedBoard } = useBoardContext();
@@ -58,66 +40,59 @@ const CardModal: FC<CardModalProps> = ({ open, onClose }) => {
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={() => onClose(formValues)}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        <CardHeader
-          duedate={Boolean(formValues.duedate)}
+    <ModalComponent open={open} onClose={() => onClose(formValues)} id={"Card"}>
+      <CardHeader
+        duedate={Boolean(formValues.duedate)}
+        onChange={handleChange}
+        onDeleteDuedate={handleDeleteDuedate}
+      />
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h6" component="h2">
+          {selectedBoard.title + " > " + listTitle}
+          {formValues.duedate && (
+            <TextField
+              onChange={handleChange}
+              type="date"
+              value={formValues.duedate}
+              name="duedate"
+              sx={{
+                float: "right",
+                width: 200,
+              }}
+            />
+          )}
+        </Typography>
+        <TextField
+          required
+          name="title"
+          value={formValues.title}
+          label="Title"
           onChange={handleChange}
-          onDeleteDuedate={handleDeleteDuedate}
+          sx={{ marginTop: 2 }}
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Visibility />
+              </InputAdornment>
+            ),
+          }}
         />
-        <Box sx={{ p: 4 }}>
-          <Typography variant="h6" component="h2">
-            {selectedBoard.title + " > " + listTitle}
-            {formValues.duedate && (
-              <TextField
-                onChange={handleChange}
-                type="date"
-                value={formValues.duedate}
-                name="duedate"
-                sx={{
-                  float: "right",
-                  width: 200,
-                }}
-              />
-            )}
-          </Typography>
-          <TextField
-            required
-            name="title"
-            value={formValues.title}
-            label="Title"
-            onChange={handleChange}
-            sx={{ marginTop: 2 }}
-            fullWidth
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Visibility />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            name="description"
-            value={formValues.description ? formValues.description : ""}
-            label="Description"
-            onChange={handleChange}
-            sx={{ marginTop: 2 }}
-            multiline
-            fullWidth
-            rows="3"
-          />
-          {selectedCard.labels.length > 0 && <Labels />}
-          {selectedCard.checklists.length > 0 && <CheckLists />}
-          <CommentList />
-        </Box>
+        <TextField
+          name="description"
+          value={formValues.description ? formValues.description : ""}
+          label="Description"
+          onChange={handleChange}
+          sx={{ marginTop: 2 }}
+          multiline
+          fullWidth
+          rows="3"
+        />
+        {selectedCard.labels.length > 0 && <Labels />}
+        {selectedCard.checklists.length > 0 && <CheckLists />}
+        <CommentList />
       </Box>
-    </Modal>
+    </ModalComponent>
   );
 };
 

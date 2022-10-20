@@ -28,7 +28,10 @@ const CommentList = () => {
   return (
     <Box sx={{ paddingTop: 4 }}>
       <Typography variant="h6">
-        <CommentOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} />
+        <CommentOutlinedIcon
+          fontSize="medium"
+          sx={{ marginBottom: "-4px", marginRight: 1 }}
+        />
         Comment
       </Typography>
       <AccountCircleIcon
@@ -53,7 +56,10 @@ const CommentList = () => {
       {selectedCard.comments.length > 0 && (
         <Box sx={{ paddingTop: 4 }}>
           <Typography variant="h6">
-            <CommentOutlinedIcon fontSize="small" sx={{ marginRight: 1 }} />
+            <CommentOutlinedIcon
+              fontSize="medium"
+              sx={{ marginBottom: "-4px", marginRight: 1 }}
+            />
             Activity
           </Typography>
           {selectedCard.comments.map((comment) => (

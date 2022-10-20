@@ -5,7 +5,6 @@ import {
   Tooltip,
   Typography,
   IconButton,
-  Menu,
   MenuItem,
 } from "@mui/material";
 import { FC, useState } from "react";
@@ -14,30 +13,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { comment as commentService } from "../../services/endpoints/comment";
 import { useCardContext } from "../../contexts/CardContext/CardContext";
-
-const style = {
-  overflow: "visible",
-  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-  mt: 1.5,
-  "& .MuiAvatar-root": {
-    width: 32,
-    height: 32,
-    ml: -0.5,
-    mr: 1,
-  },
-  "&:before": {
-    content: '""',
-    display: "block",
-    position: "absolute",
-    top: 0,
-    right: 14,
-    width: 10,
-    height: 10,
-    bgcolor: "background.paper",
-    transform: "translateY(-50%) rotate(45deg)",
-    zIndex: 0,
-  },
-};
+import MenuComponent from "../MenuComponent";
 
 const CommentListItem: FC<CommentListItemProps> = ({ comment }) => {
   const { deleteComment } = useCardContext();
@@ -72,21 +48,15 @@ const CommentListItem: FC<CommentListItemProps> = ({ comment }) => {
             </Tooltip>
           </Typography>
           <Typography sx={{ marginTop: 1 }}>{comment.message}</Typography>
-          <Menu
+          <MenuComponent
             anchorEl={anchorEl}
             id="list-menu"
             open={openMenu}
             onClose={() => setAnchorEl(null)}
             onClick={() => setAnchorEl(null)}
-            PaperProps={{
-              elevation: 0,
-              sx: style,
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={handleDelete}>Delete Comment</MenuItem>
-          </Menu>
+          </MenuComponent>
         </CardContent>
       </Card>
     </Box>

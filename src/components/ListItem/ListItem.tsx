@@ -4,7 +4,6 @@ import {
   Divider,
   IconButton,
   InputAdornment,
-  Menu,
   MenuItem,
   TextField,
   Tooltip,
@@ -24,30 +23,7 @@ import { useLoginContext } from "../../contexts/LoginContext/LoginContext";
 import { Draggable } from "react-beautiful-dnd";
 import { card } from "../../services/endpoints/card";
 import CardList from "../CardList";
-
-const style = {
-  overflow: "visible",
-  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-  mt: 1.5,
-  "& .MuiAvatar-root": {
-    width: 32,
-    height: 32,
-    ml: -0.5,
-    mr: 1,
-  },
-  "&:before": {
-    content: '""',
-    display: "block",
-    position: "absolute",
-    top: 0,
-    right: 14,
-    width: 10,
-    height: 10,
-    bgcolor: "background.paper",
-    transform: "translateY(-50%) rotate(45deg)",
-    zIndex: 0,
-  },
-};
+import MenuComponent from "../MenuComponent";
 
 const ListItem: FC<ListItemProps> = ({ list, index }) => {
   const { deleteList, updateList, addCard } = useListContext();
@@ -165,22 +141,16 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
                   )}
                 </Typography>
               )}
-              <Menu
+              <MenuComponent
                 anchorEl={anchorEl}
                 id="list-menu"
                 open={openMenu}
                 onClose={() => setAnchorEl(null)}
                 onClick={() => setAnchorEl(null)}
-                PaperProps={{
-                  elevation: 0,
-                  sx: style,
-                }}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
                 <MenuItem onClick={() => setEdit(true)}>Rename List</MenuItem>
                 <MenuItem onClick={handleDelete}>Delete List</MenuItem>
-              </Menu>
+              </MenuComponent>
             </CardContent>
             <CardList listId={list.id} cards={list.cards} />
             <Divider />
@@ -213,7 +183,10 @@ const ListItem: FC<ListItemProps> = ({ list, index }) => {
                 />
               ) : (
                 <Typography variant="h6" onClick={() => setAddNewCard(true)}>
-                  <AddIcon sx={{ marginRight: 1, width: 24, height: 24 }} />
+                  <AddIcon
+                    fontSize="medium"
+                    sx={{ marginBottom: "-4px", marginRight: 1 }}
+                  />
                   Add a card
                 </Typography>
               )}
